@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum roleType {
+  ADMIN
+  USER
+}
+
+enum priorityType {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  password     String
+  role         roleType @default(USER)
+  refreshToken String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  isDeleted    Boolean  @default(false)
+
+  announcements Announcement[]
+  readStatus    ReadStatus[]
+
+  @@map("users")
+}
+
+model Announcement {
+  id         String       @id @default(uuid())
+  title      String
+  content    String
+  priority   priorityType
+  readStatus ReadStatus[]
+
+  // Connecting announcement to user
+  createdBy User   @relation(fields: [userId], references: [id])
+  userId    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("announcement")
+}
+
+model ReadStatus {
+  id     String    @id @default(uuid())
+  isRead Boolean   @default(false)
+  readAt DateTime?
+
+  // Connecting user to readStatus
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  // One announcement has many readStatus
+  announcement   Announcement @relation(fields: [announcementId], references: [id])
+  announcementId String
+
+  // One unique pair of user and announcement with readId
+  @@unique([userId, announcementId])
+  @@index([userId])
+  @@index([announcementId])
+  @@map("read_status")
+}
