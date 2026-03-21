@@ -16,6 +16,12 @@ import { authorize } from "../middleware/authorize.js";
 // Validation schemas import
 import { registry } from "../config/swagger.js";
 import { z } from "zod";
+import {
+  getMyselfResponseSchema,
+  getUsersResponseSchema,
+  userAnnouncementStatusResponseSchema,
+} from "../validators/responses/userResponses.js";
+import { successMessageResponseSchema } from "../validators/responses/commonResponses.js";
 
 const router = express.Router();
 
@@ -28,7 +34,10 @@ registry.registerPath({
   summary: "Get current user profile",
   security: [{ bearerAuth: [] }],
   responses: {
-    200: { description: "Current user profile" },
+    200: {
+      description: "Current user profile",
+      content: { "application/json": { schema: getMyselfResponseSchema } },
+    },
   },
 });
 router.get("/me", asyncHandler(getMyself));
@@ -40,7 +49,10 @@ registry.registerPath({
   summary: "Get all users (Admin)",
   security: [{ bearerAuth: [] }],
   responses: {
-    200: { description: "List of users" },
+    200: {
+      description: "List of users",
+      content: { "application/json": { schema: getUsersResponseSchema } },
+    },
   },
 });
 router.get("/", authorize("ADMIN"), asyncHandler(getUsers));
@@ -57,7 +69,7 @@ registry.registerPath({
     }),
   },
   responses: {
-    200: { description: "User deleted" },
+    204: { description: "User deleted" },
   },
 });
 router.delete("/:id", authorize("ADMIN"), asyncHandler(deleteUser));
@@ -80,7 +92,12 @@ registry.registerPath({
     }),
   },
   responses: {
-    200: { description: "Announcement status for the user" },
+    200: {
+      description: "Announcement status for the user",
+      content: {
+        "application/json": { schema: userAnnouncementStatusResponseSchema },
+      },
+    },
   },
 });
 router.get(

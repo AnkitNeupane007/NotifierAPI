@@ -23,6 +23,14 @@ import { announcementSchema } from "../validators/announcementValidators.js";
 // Validation schemas import
 import { registry } from "../config/swagger.js";
 import { z } from "zod";
+import {
+  getAnnouncementsResponseSchema,
+  getAdminAnnouncementsResponseSchema,
+  getAnnouncementByIdResponseSchema,
+  createAnnouncementResponseSchema,
+  getUnreadResponseSchema,
+} from "../validators/responses/announcementResponses.js";
+import { successMessageResponseSchema } from "../validators/responses/commonResponses.js";
 
 const router = express.Router();
 
@@ -35,7 +43,10 @@ registry.registerPath({
   summary: "Get unread announcements for the user",
   security: [{ bearerAuth: [] }],
   responses: {
-    200: { description: "Unread announcements" },
+    200: {
+      description: "Unread announcements",
+      content: { "application/json": { schema: getUnreadResponseSchema } },
+    },
   },
 });
 router.get("/unread", asyncHandler(getUnread));
@@ -53,7 +64,12 @@ registry.registerPath({
     }),
   },
   responses: {
-    200: { description: "List of announcements" },
+    200: {
+      description: "List of announcements",
+      content: {
+        "application/json": { schema: getAdminAnnouncementsResponseSchema },
+      },
+    },
   },
 });
 router.get("/admin", authorize("ADMIN"), asyncHandler(getAdminAnnouncements)); //can give query param page, limit for pagination
@@ -71,7 +87,12 @@ registry.registerPath({
     }),
   },
   responses: {
-    200: { description: "List of announcements" },
+    200: {
+      description: "List of announcements",
+      content: {
+        "application/json": { schema: getAnnouncementsResponseSchema },
+      },
+    },
   },
 });
 router.get("/", asyncHandler(getAnnouncements)); //can give query param page, limit for pagination
@@ -88,7 +109,12 @@ registry.registerPath({
     }),
   },
   responses: {
-    200: { description: "Announcement details" },
+    200: {
+      description: "Announcement details",
+      content: {
+        "application/json": { schema: getAnnouncementByIdResponseSchema },
+      },
+    },
   },
 });
 router.get("/:id", asyncHandler(getAnnouncementsById));
@@ -105,7 +131,10 @@ registry.registerPath({
     }),
   },
   responses: {
-    200: { description: "Deleted announcement" },
+    200: {
+      description: "Deleted announcement",
+      content: { "application/json": { schema: successMessageResponseSchema } },
+    },
   },
 });
 router.delete(
@@ -130,7 +159,12 @@ registry.registerPath({
     },
   },
   responses: {
-    201: { description: "Announcement created" },
+    201: {
+      description: "Announcement created",
+      content: {
+        "application/json": { schema: createAnnouncementResponseSchema },
+      },
+    },
   },
 });
 router.post(
@@ -152,7 +186,10 @@ registry.registerPath({
     }),
   },
   responses: {
-    200: { description: "Marked as read" },
+    200: {
+      description: "Marked as read",
+      content: { "application/json": { schema: successMessageResponseSchema } },
+    },
   },
 });
 router.post("/read/:announcementId/", asyncHandler(markAsRead));

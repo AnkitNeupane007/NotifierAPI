@@ -23,6 +23,11 @@ import { authMiddleware } from "../middleware/authMiddleware.js";
 
 import { registry } from "../config/swagger.js";
 import { z } from "zod";
+import {
+  loginResponseSchema,
+  registerResponseSchema,
+  authMessageResponseSchema,
+} from "../validators/responses/authResponses.js";
 
 const router = express.Router();
 
@@ -43,6 +48,11 @@ registry.registerPath({
   responses: {
     201: {
       description: "Registered successfully",
+      content: {
+        "application/json": {
+          schema: registerResponseSchema,
+        },
+      },
     },
   },
 });
@@ -65,6 +75,11 @@ registry.registerPath({
   responses: {
     200: {
       description: "Email verified successfully",
+      content: {
+        "application/json": {
+          schema: authMessageResponseSchema,
+        },
+      },
     },
   },
 });
@@ -87,6 +102,11 @@ registry.registerPath({
   responses: {
     200: {
       description: "Verification email sent",
+      content: {
+        "application/json": {
+          schema: authMessageResponseSchema,
+        },
+      },
     },
   },
 });
@@ -105,6 +125,11 @@ registry.registerPath({
   responses: {
     200: {
       description: "Logged out successfully",
+      content: {
+        "application/json": {
+          schema: authMessageResponseSchema,
+        },
+      },
     },
   },
 });
@@ -127,6 +152,11 @@ registry.registerPath({
   responses: {
     200: {
       description: "Logged in successfully",
+      content: {
+        "application/json": {
+          schema: loginResponseSchema,
+        },
+      },
     },
   },
 });
@@ -140,6 +170,11 @@ registry.registerPath({
   responses: {
     200: {
       description: "Token refreshed",
+      content: {
+        "application/json": {
+          schema: authMessageResponseSchema,
+        },
+      },
     },
   },
 });
