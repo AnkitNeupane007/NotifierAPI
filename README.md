@@ -95,7 +95,14 @@ npm run dev
 
 The server will start, typically on the port configured or default (e.g., `http://localhost:5001`).
 
-## 📁 Project Structure
+## � API Documentation (Swagger)
+
+This API uses **Swagger UI** for interactive documentation, dynamically generated directly from the existing **Zod** schema validators using `@asteasolutions/zod-to-openapi`. This ensures the documentation is always aligned with runtime validation rules.
+
+Once the server is running, you can access the Swagger documentation in your browser at:
+**[http://localhost:5001/api-docs](http://localhost:5001/api-docs)**
+
+## �📁 Project Structure
 
 ```
 ├── prisma/
