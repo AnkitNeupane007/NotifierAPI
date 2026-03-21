@@ -11,6 +11,7 @@ const getUsers = async (req, res) => {
       name: true,
       email: true,
       isDeleted: true,
+      isEmailVerified: true,
     },
   });
 
@@ -134,4 +135,4 @@ const getUserAnnouncementStatus = async (req, res) => {
   });
 };
 
-export { getUsers, getMyself, deleteUser, getUserAnnouncementStatus };
+export { deleteUser, getMyself, getUserAnnouncementStatus, getUsers };

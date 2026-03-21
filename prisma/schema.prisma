@@ -35,6 +35,15 @@ model User {
   updatedAt    DateTime @updatedAt
   isDeleted    Boolean  @default(false)
 
+  // For email verification
+  isEmailVerified    Boolean   @default(false)
+  emailVerifyToken   String?
+  emailVerifyExpires DateTime?
+
+  // For forgot password
+  resetPasswordToken   String?
+  resetPasswordExpires DateTime?
+
   announcements Announcement[]
   readStatus    ReadStatus[]
 

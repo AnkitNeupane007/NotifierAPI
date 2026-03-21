@@ -21,13 +21,7 @@ app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/announcements", announcementRoutes);
 
-// Error middleware
-// Catch unhandled routes (404)
-// app.all("*", (req, res, next) => {
-//   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-// });
-
-// Centralized Error middleware (must be the LAST middleware)
+// Centralized Error middleware
 app.use(errorHandler);
 
 const PORT = 5001;
