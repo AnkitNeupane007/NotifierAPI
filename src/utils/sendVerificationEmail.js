@@ -11,7 +11,7 @@ const sendVerificationEmail = async (user) => {
     .update(verificationToken)
     .digest("hex");
 
-  const emailVerifyExpires = new Date(Date.now() + 60 * 1000); // 10 min
+  const emailVerifyExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
 
   await prisma.user.update({
     where: { id: user.id },

@@ -6,8 +6,6 @@ import crypto from "crypto";
 // Utils imports
 import { sendVerificationEmail } from "../../utils/sendVerificationEmail.js";
 
-import AppError from "../../utils/AppError.js";
-
 const resendVerificationEmail = async (req, res) => {
   const { email } = req.body;
 
