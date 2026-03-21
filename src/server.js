@@ -9,6 +9,9 @@ import announcementRoutes from "./routes/announcementRoutes.js";
 // Import error middleware
 import errorHandler from "./middleware/errorHandler.js";
 
+// Import swagger config
+import { swaggerDocs } from "./config/swagger.js";
+
 const app = express();
 
 // Connecting to middlewares
@@ -23,6 +26,9 @@ app.use("/announcements", announcementRoutes);
 
 // Centralized Error middleware
 app.use(errorHandler);
+
+// Apply swagger configuration
+swaggerDocs(app);
 
 const PORT = 5001;
 const server = app.listen(PORT, () => {
