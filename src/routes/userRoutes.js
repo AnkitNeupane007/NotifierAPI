@@ -1,12 +1,10 @@
 import express from "express";
 
 // Controller imports
-import {
-  getUsers,
-  getMyself,
-  deleteUser,
-  getUserAnnouncementStatus,
-} from "../controller/userController.js";
+import getUsers from "../controller/user/getUsersController.js";
+import getMyself from "../controller/user/getMyselfController.js";
+import deleteUser from "../controller/user/deleteUserController.js";
+import getUserAnnouncementStatus from "../controller/user/getUserAnnouncementStatusController.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 
 //Auth Middleware imports
@@ -30,4 +28,3 @@ router.get(
 ); // Query params for key "status" should be either "read" or "unread"
 
 export default router;
-

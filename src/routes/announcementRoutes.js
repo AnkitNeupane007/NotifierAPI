@@ -2,15 +2,13 @@ import express from "express";
 
 // Controller imports
 import asyncHandler from "../middleware/asyncHandler.js";
-import {
-  getAnnouncements,
-  postAnnouncements,
-  getAnnouncementsById,
-  deleteAnnouncementsById,
-  markAsRead,
-  getUnread,
-  getAdminAnnouncements,
-} from "../controller/announcementController.js";
+import getAnnouncements from "../controller/announcement/getAnnouncementsController.js";
+import postAnnouncements from "../controller/announcement/postAnnouncementsController.js";
+import getAnnouncementsById from "../controller/announcement/getAnnouncementsByIdController.js";
+import deleteAnnouncementsById from "../controller/announcement/deleteAnnouncementsByIdController.js";
+import markAsRead from "../controller/announcement/markAsReadController.js";
+import getUnread from "../controller/announcement/getUnreadController.js";
+import getAdminAnnouncements from "../controller/announcement/getAdminAnnouncementsController.js";
 
 //Auth Middleware imports
 import { authMiddleware } from "../middleware/authMiddleware.js";
@@ -48,4 +46,3 @@ router.post(
 router.post("/read/:announcementId/", asyncHandler(markAsRead));
 
 export default router;
-
