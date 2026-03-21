@@ -9,6 +9,7 @@ import {
   deleteAnnouncementsById,
   markAsRead,
   getUnread,
+  getAdminAnnouncements,
 } from "../controller/announcementController.js";
 
 //Auth Middleware imports
@@ -26,6 +27,8 @@ const router = express.Router();
 router.use(authMiddleware);
 
 router.get("/unread", asyncHandler(getUnread));
+
+router.get("/admin", authorize("ADMIN"), asyncHandler(getAdminAnnouncements)); //can give query param page, limit for pagination
 
 router.get("/", asyncHandler(getAnnouncements)); //can give query param page, limit for pagination
 

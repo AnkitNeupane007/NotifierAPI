@@ -12,6 +12,13 @@ const envSchema = z.object({
 
   ACCESS_EXPIRES_IN: z.string(),
   REFRESH_EXPIRES_IN: z.string(),
+
+  BASE_URL: z.string().url(),
+
+  EMAIL_HOST: z.string(),
+  EMAIL_PORT: z.string(),
+  EMAIL_USER: z.string(),
+  EMAIL_PASS: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);

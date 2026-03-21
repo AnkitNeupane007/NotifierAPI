@@ -18,4 +18,8 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password cant be empty"),
 });
 
-export { registerSchema, loginSchema };
+const resendVerificationEmailSchema = z.object({
+  email: z.string().email().min(1, "Email cannot be empty."),
+});
+
+export { registerSchema, loginSchema, resendVerificationEmailSchema };
