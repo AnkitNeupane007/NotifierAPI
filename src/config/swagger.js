@@ -7,6 +7,9 @@ import { z } from "zod";
 import swaggerUi from "swagger-ui-express";
 import { env } from "../config/envValidator.js";
 
+// Import mapping logic
+import registerDocs from "../swagger/index.js";
+
 // Ensure zod is extended
 extendZodWithOpenApi(z);
 
@@ -19,6 +22,9 @@ registry.registerComponent("securitySchemes", "bearerAuth", {
 });
 
 export const swaggerDocs = (app) => {
+  // Register all structured endpoints
+  registerDocs();
+
   // Generate the OpenAPI spec definition
   const generator = new OpenApiGeneratorV3(registry.definitions);
 
