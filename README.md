@@ -10,6 +10,7 @@ A robust Node.js backend API featuring user authentication, email verification, 
 - **Validation:** Zod
 - **Authentication:** JSON Web Tokens (JWT) & bcryptjs
 - **Email Services:** Nodemailer
+- **Documentation** Swagger
 
 ## ✨ Features
 
