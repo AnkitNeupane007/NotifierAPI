@@ -8,6 +8,13 @@ export const announcementBaseSchema = z.object({
   title: z.string().openapi({ example: "System Maintenance" }),
   content: z.string().openapi({ example: "Downtime at midnight" }),
   priority: z.string().openapi({ example: "HIGH" }),
+  type: z.string().optional().openapi({ example: "READ_ONLY" }),
+  dueDate: z
+    .string()
+    .nullable()
+    .optional()
+    .openapi({ example: "2026-03-31T23:59:59Z" }),
+  maxScore: z.number().nullable().optional().openapi({ example: 100 }),
   userId: z.string().openapi({ example: "cm0z..." }),
   createdAt: z.string().openapi({ example: "2026-03-21T10:00:00.000Z" }),
   updatedAt: z.string().openapi({ example: "2026-03-21T10:00:00.000Z" }),
