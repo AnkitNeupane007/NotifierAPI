@@ -1,8 +1,17 @@
 import { env } from "../config/envValidator.js";
+import { logger } from "../utils/logger.js";
 
 const errorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
+
+  logger.error({
+    message: err.message,
+    stack: err.stack,
+    path: req.originalUrl,
+    method: req.method,
+    userId: req.user?.id || null,
+  });
 
   if (err.code === "P2025") {
     return res.status(404).json({

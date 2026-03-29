@@ -12,9 +12,13 @@ import errorHandler from "./middleware/errorHandler.js";
 // Import swagger config
 import { swaggerDocs } from "./config/swagger.js";
 
+// Import logger
+import {requestLogger} from "./middleware/requestLogger.js";
+
 const app = express();
 
 // Connecting to middlewares
+app.use(requestLogger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieparser());
