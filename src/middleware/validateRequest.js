@@ -1,4 +1,3 @@
-import { application } from "express";
 import AppError from "../utils/AppError.js";
 
 export const validateRequest = (schema) => {

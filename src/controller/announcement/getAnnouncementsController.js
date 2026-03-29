@@ -3,34 +3,52 @@ import { prisma } from "../../config/db.js";
 const getAnnouncements = async (req, res) => {
   const userId = req.user.id;
 
-  // Get pagination values from query
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 5;
-
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 5;
   const skip = (page - 1) * limit;
 
-  // Get announcements with pagination
-  const announcements = await prisma.announcement.findMany({
-    skip,
-    take: limit,
-    include: {
-      readStatus: {
-        where: { userId: userId },
+  const [announcements, total] = await Promise.all([
+    prisma.announcement.findMany({
+      skip,
+      take: limit,
+      orderBy: {
+        createdAt: "desc",
       },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        createdAt: true,
+        priority: true,
+        type: true,
+        dueDate: true,
+        maxScore: true,
+
+        readStatus: {
+          where: {
+            userId,
+          },
+          select: {
+            isRead: true,
+          },
+        },
+      },
+    }),
+
+    prisma.announcement.count(),
+  ]);
+
+  const formatted = announcements.map((a) => {
+    const isRead = a.readStatus.length > 0 ? a.readStatus[0].isRead : false;
+
+    // remove relation completely
+    delete a.readStatus;
+
+    return {
+      ...a,
+      isRead,
+    };
   });
-
-  // Attach isRead field
-  const formatted = announcements.map((a) => ({
-    ...a,
-    isRead: a.readStatus.length > 0 ? a.readStatus[0].isRead : false,
-  }));
-
-  // Get total count
-  const total = await prisma.announcement.count();
 
   return res.status(200).json({
     status: "success",
@@ -41,7 +59,7 @@ const getAnnouncements = async (req, res) => {
         page,
         limit,
         totalPages: Math.ceil(total / limit),
-        next: limit * page < total,
+        hasNext: skip + limit < total,
       },
     },
   });

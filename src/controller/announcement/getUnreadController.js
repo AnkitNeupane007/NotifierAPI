@@ -12,7 +12,17 @@ const getUnread = async (req, res) => {
         },
       },
     },
-    orderBy: [{ priority: "desc" }],
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      createdAt: true,
+      priority: true,
+      type: true,
+      dueDate: true,
+      maxScore: true,
+    },
+    orderBy: { priority: "desc" },
   });
 
   return res.status(200).json({

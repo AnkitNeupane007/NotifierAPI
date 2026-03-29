@@ -22,7 +22,14 @@ export const announcementBaseSchema = z.object({
 });
 
 export const adminAnnouncementBaseSchema = announcementBaseSchema
-  .omit({ isRead: true })
+  .omit({
+    isRead: true,
+    content: true,
+    userId: true,
+    updatedAt: true,
+    dueDate: true,
+    maxScore: true,
+  })
   .extend({
     totalReads: z.number().openapi({ example: 42 }),
     readers: z.array(
@@ -40,14 +47,16 @@ export const paginationSchema = z.object({
   page: z.number().openapi({ example: 1 }),
   limit: z.number().openapi({ example: 5 }),
   totalPages: z.number().openapi({ example: 2 }),
-  next: z.boolean().openapi({ example: true }),
+  hasNext: z.boolean().openapi({ example: true }),
 });
 
 export const getAnnouncementsResponseSchema = z
   .object({
     status: z.string().openapi({ example: "success" }),
     data: z.object({
-      announcements: z.array(announcementBaseSchema),
+      announcements: z.array(
+        announcementBaseSchema.omit({ userId: true, updatedAt: true }),
+      ),
       pagination: paginationSchema.optional(),
     }),
   })
@@ -67,19 +76,14 @@ export const getAnnouncementByIdResponseSchema = z
   .object({
     status: z.string().openapi({ example: "success" }),
     data: z.object({
-      announcement: announcementBaseSchema.omit({ isRead: true }).extend({
-        readStatus: z
-          .array(
-            z.object({
-              id: z.string().optional(),
-              userId: z.string().optional(),
-              announcementId: z.string().optional(),
-              isRead: z.boolean().optional(),
-              readAt: z.string().optional(),
-            }),
-          )
-          .optional(),
-      }),
+      announcement: announcementBaseSchema
+        .omit({ isRead: true, userId: true, updatedAt: true })
+        .extend({
+          isRead: z.boolean().optional(),
+          readAt: z.string().optional(),
+          attachments: z.array(z.any()).optional(),
+          submission: z.any().optional(),
+        }),
     }),
   })
   .openapi("GetAnnouncementByIdResponse");
@@ -95,7 +99,13 @@ export const getUnreadResponseSchema = z
   .object({
     status: z.string().openapi({ example: "success" }),
     data: z.object({
-      unread: z.array(announcementBaseSchema.omit({ isRead: true })),
+      unread: z.array(
+        announcementBaseSchema.omit({
+          isRead: true,
+          userId: true,
+          updatedAt: true,
+        }),
+      ),
     }),
   })
   .openapi("GetUnreadAnnouncementsResponse");

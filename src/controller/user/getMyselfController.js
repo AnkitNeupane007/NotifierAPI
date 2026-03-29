@@ -1,3 +1,4 @@
+import { id } from "zod/locales";
 import { prisma } from "../../config/db.js";
 
 const getMyself = async (req, res) => {
@@ -9,6 +10,7 @@ const getMyself = async (req, res) => {
     status: "success",
     data: {
       user: {
+        id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,

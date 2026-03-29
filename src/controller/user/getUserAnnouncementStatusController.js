@@ -19,8 +19,19 @@ const getUserAnnouncementStatus = async (req, res) => {
       userId,
       isRead: true,
     },
-    include: {
-      announcement: true,
+    select: {
+      announcement: {
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          priority: true,
+          type: true,
+          createdAt: true,
+          dueDate: true,
+          maxScore: true,
+        },
+      },
     },
   });
 
@@ -32,6 +43,17 @@ const getUserAnnouncementStatus = async (req, res) => {
           isRead: true,
         },
       },
+    },
+
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      priority: true,
+      type: true,
+      createdAt: true,
+      dueDate: true,
+      maxScore: true,
     },
   });
 

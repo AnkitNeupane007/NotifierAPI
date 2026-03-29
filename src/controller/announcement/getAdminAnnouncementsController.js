@@ -37,11 +37,10 @@ const getAdminAnnouncements = async (req, res) => {
   const formatted = announcements.map((a) => ({
     id: a.id,
     title: a.title,
-    content: a.content,
+    // content: a.content,
+    type: a.type,
     priority: a.priority,
-    userId: a.userId,
     createdAt: a.createdAt,
-    updatedAt: a.updatedAt,
     totalReads: a.readStatus.length,
     readers: a.readStatus.map((rs) => ({
       userId: rs.user.id,
