@@ -46,6 +46,8 @@ model User {
   updatedAt    DateTime @updatedAt
   isDeleted    Boolean  @default(false)
 
+  profilePictureUrl String?
+
   // For email verification
   isEmailVerified    Boolean   @default(false)
   emailVerifyToken   String?
