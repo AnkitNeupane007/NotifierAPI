@@ -21,7 +21,7 @@ const register = async (req, res) => {
       const restoredUser = await prisma.user.update({
         where: { email },
         data: {
-          name,
+          name: name,
           password: hashedPassword,
           isDeleted: false,
           isEmailVerified: false,
