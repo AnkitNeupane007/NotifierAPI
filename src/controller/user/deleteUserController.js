@@ -25,7 +25,7 @@ const deleteUser = async (req, res) => {
     }),
     prisma.user.update({
       where: { id: userId },
-      data: { isDeleted: true },
+      data: { isDeleted: true, isEmailVerified: false },
     }),
   ]);
 
