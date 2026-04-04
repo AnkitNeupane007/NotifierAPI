@@ -1,7 +1,7 @@
 import { registry } from "../config/swagger.js";
-import { authSwaggerDocs } from "./docs/authDocs.js";
-import { userSwaggerDocs } from "./docs/userDocs.js";
-import { announcementSwaggerDocs } from "./docs/announcementDocs.js";
+import { authSwaggerDocs } from "./docs/auth.js";
+import { userSwaggerDocs } from "./docs/users.js";
+import { announcementSwaggerDocs } from "./docs/announcements.js";
 
 const registerDocs = () => {
   // Register Auth Docs

@@ -5,7 +5,7 @@ import AppError from "../../utils/AppError.js";
 export const uploadFiletoAnnouncements = async (req, res) => {
   const { id } = req.params;
 
-  // Error handling: Check if any body payload was sent
+  // Check if any body payload was sent
   if (req.body && Object.keys(req.body).length > 0) {
     throw new AppError(
       "This endpoint is strictly for file uploads. Please do not send request body data.",
@@ -13,7 +13,7 @@ export const uploadFiletoAnnouncements = async (req, res) => {
     );
   }
 
-  // Error handling: Check if files actually exist in the request
+  // Check if files actually exist in the request
   if (!req.files || Object.keys(req.files).length === 0) {
     throw new AppError(
       "No files uploaded. Please attach files to the request.",
@@ -21,7 +21,6 @@ export const uploadFiletoAnnouncements = async (req, res) => {
     );
   }
 
-  // Check if announcement exists
   const announcement = await prisma.announcement.findUnique({
     where: { id },
   });
@@ -32,7 +31,6 @@ export const uploadFiletoAnnouncements = async (req, res) => {
 
   const attachmentRecords = [];
 
-  // Helper function to process uploads
   const processUploads = async (files) => {
     if (!files || files.length === 0) return;
 
@@ -45,17 +43,15 @@ export const uploadFiletoAnnouncements = async (req, res) => {
         file.originalname, // fileId
       );
 
-      // Push the data to our array to save in Prisma later
       attachmentRecords.push({
         filename: file.originalname,
-        fileUrl: filePath, // The returned path from Supabase
+        fileUrl: filePath, 
         fileType: file.mimetype,
         announcementId: announcement.id,
       });
     }
   };
 
-  // Check if there are files attached in the request
   if (req.files) {
     await processUploads(req.files["images"]);
     await processUploads(req.files["documents"]);

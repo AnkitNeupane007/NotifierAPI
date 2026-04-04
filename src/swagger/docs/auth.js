@@ -2,7 +2,7 @@ import {
   registerSchema,
   loginSchema,
   resendVerificationEmailSchema,
-} from "../../validators/authValidators.js";
+} from "../../validators/auth.js";
 import {
   loginResponseSchema,
   registerResponseSchema,

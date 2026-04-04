@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { announcementSchema } from "../../validators/announcementValidators.js";
+import { announcementSchema } from "../../validators/announcements.js";
 import { successMessageResponseSchema } from "../../validators/responses/commonResponses.js";
 import {
   getAnnouncementsResponseSchema,
@@ -16,6 +16,12 @@ export const announcementSwaggerDocs = {
     tags: ["Announcements"],
     summary: "Get unread announcements for the user",
     security: [{ bearerAuth: [] }],
+    request: {
+      query: z.object({
+        page: z.string().optional().openapi({ description: "Page number" }),
+        limit: z.string().optional().openapi({ description: "Limit" }),
+      }),
+    },
     responses: {
       200: {
         description: "Unread announcements",
@@ -128,6 +134,43 @@ export const announcementSwaggerDocs = {
         description: "Announcement created",
         content: {
           "application/json": { schema: createAnnouncementResponseSchema },
+        },
+      },
+    },
+  },
+
+  uploadFile: {
+    method: "post",
+    path: "/announcements/upload/{id}",
+    tags: ["Announcements"],
+    summary: "Upload files for an announcement (Admin)",
+    security: [{ bearerAuth: [] }],
+    request: {
+      params: z.object({
+        id: z.string().openapi({ description: "Announcement ID" }),
+      }),
+      body: {
+        content: {
+          "multipart/form-data": {
+            schema: z.object({
+              images: z
+                .array(z.string().openapi({ format: "binary" }))
+                .optional()
+                .openapi({ description: "Up to 5 images" }),
+              documents: z
+                .array(z.string().openapi({ format: "binary" }))
+                .optional()
+                .openapi({ description: "Up to 5 documents" }),
+            }),
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Files uploaded successfully",
+        content: {
+          "application/json": { schema: getAnnouncementByIdResponseSchema },
         },
       },
     },

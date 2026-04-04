@@ -1,5 +1,5 @@
 import multer from "multer";
-import AppError from "../utils/AppError.js"; // Optional: Use your custom error
+import AppError from "../utils/AppError.js";
 
 const storage = multer.memoryStorage();
 

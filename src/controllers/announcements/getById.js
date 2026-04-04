@@ -71,7 +71,6 @@ const getAnnouncementsById = async (req, res) => {
     // Extract just the paths that Supabase needs
     const filePaths = processedAttachments.map((att) => att.fileUrl);
 
-    // Get signed URLs (using 'attachments' as the bucket name and say 3600 seconds/1 hr for expiry)
     // Adjust the bucket name and expiry duration if necessary.
     const signedUrlsData = await getSignedUrls("attachments", filePaths, 3600);
 

@@ -7,7 +7,6 @@ const getAdminAnnouncements = async (req, res) => {
 
   const skip = (page - 1) * limit;
 
-  // Get announcements with pagination and ALL readers
   const announcements = await prisma.announcement.findMany({
     skip,
     take: limit,
@@ -33,11 +32,11 @@ const getAdminAnnouncements = async (req, res) => {
     },
   });
 
-  // Optional: map to make the response cleaner
+  // map to make the response cleaner
   const formatted = announcements.map((a) => ({
     id: a.id,
     title: a.title,
-    // content: a.content,
+    content: a.content,
     type: a.type,
     priority: a.priority,
     createdAt: a.createdAt,

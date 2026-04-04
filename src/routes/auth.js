@@ -1,24 +1,24 @@
 import express from "express";
 
 // Controller imports
-import { refresh } from "../controller/auth/refreshController.js";
-import { logout } from "../controller/auth/logoutController.js";
-import { login } from "../controller/auth/loginController.js";
-import { register } from "../controller/auth/registerController.js";
-import { verifyEmail } from "../controller/auth/verifyEmailController.js";
-import { resendVerificationEmail } from "../controller/auth/resendVerificationEmailController.js";
-import asyncHandler from "../middleware/asyncHandler.js";
+import { refresh } from "../controllers/auth/refresh.js";
+import { logout } from "../controllers/auth/logout.js";
+import { login } from "../controllers/auth/login.js";
+import { register } from "../controllers/auth/register.js";
+import { verifyEmail } from "../controllers/auth/verifyEmail.js";
+import { resendVerificationEmail } from "../controllers/auth/resendVerificationEmail.js";
+import asyncHandler from "../middlewares/asyncHandler.js";
 
 //Validation Middleware import
-import { validateRequest } from "../middleware/validateRequest.js";
+import { validateRequest } from "../middlewares/validateRequest.js";
 
 // Validation schemas import
 import {
   registerSchema,
   loginSchema,
   resendVerificationEmailSchema,
-} from "../validators/authValidators.js";
-import { authMiddleware } from "../middleware/authMiddleware.js";
+} from "../validators/auth.js";
+import { authMiddleware } from "../middlewares/auth.js";
 
 const router = express.Router();
 

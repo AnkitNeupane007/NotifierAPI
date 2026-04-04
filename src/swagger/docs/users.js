@@ -26,6 +26,12 @@ export const userSwaggerDocs = {
     tags: ["Users"],
     summary: "Get all users (Admin)",
     security: [{ bearerAuth: [] }],
+    request: {
+      query: z.object({
+        page: z.string().optional().openapi({ description: "Page number" }),
+        limit: z.string().optional().openapi({ description: "Limit" }),
+      }),
+    },
     responses: {
       200: {
         description: "List of users",
@@ -63,8 +69,9 @@ export const userSwaggerDocs = {
       query: z.object({
         status: z
           .enum(["read", "unread"])
-          .optional()
-          .openapi({ description: "Announcement status" }),
+          .openapi({ description: "Announcement status (required)" }),
+        page: z.string().optional().openapi({ description: "Page number" }),
+        limit: z.string().optional().openapi({ description: "Limit" }),
       }),
     },
     responses: {

@@ -37,4 +37,19 @@ const announcementSchema = z
   })
   .openapi("AnnouncementRequest");
 
-export { announcementSchema };
+const paginationQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(10),
+});
+
+const statusQuerySchema = z.object({
+  status: z.enum(["read", "unread"], {
+    required_error:
+      "You must specify a valid status query parameter: ?status=read or ?status=unread",
+    invalid_type_error: "Status must be either 'read' or 'unread'",
+  }),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(10),
+});
+
+export { announcementSchema, paginationQuerySchema, statusQuerySchema };

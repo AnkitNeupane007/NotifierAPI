@@ -107,5 +107,6 @@ export const getUnreadResponseSchema = z
         }),
       ),
     }),
+    pagination: paginationSchema.optional(),
   })
   .openapi("GetUnreadAnnouncementsResponse");

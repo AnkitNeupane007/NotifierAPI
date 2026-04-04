@@ -2,18 +2,18 @@ import express from "express";
 import cookieparser from "cookie-parser";
 
 // Import routes
-import authRoutes from "./routes/authRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
-import announcementRoutes from "./routes/announcementRoutes.js";
+import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
+import announcementRoutes from "./routes/announcements.js";
 
 // Import error middleware
-import errorHandler from "./middleware/errorHandler.js";
+import errorHandler from "./middlewares/errorHandler.js";
 
 // Import swagger config
 import { swaggerDocs } from "./config/swagger.js";
 
 // Import logger
-import {requestLogger} from "./middleware/requestLogger.js";
+import {requestLogger} from "./middlewares/requestLogger.js";
 
 const app = express();
 
