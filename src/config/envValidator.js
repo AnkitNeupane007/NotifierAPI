@@ -22,12 +22,13 @@ const envSchema = z.object({
 
   SUPABASE_URL: z.string().url(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20),
+  REDIS_URL: z.string().url(),
 });
 
 const _env = envSchema.safeParse(process.env);
 
 if (!_env.success) {
-  console.error("❌ Invalid environment variables:", _env.error.format());
+  console.error("Invalid environment variables:", _env.error.format());
   process.exit(1);
 }
 

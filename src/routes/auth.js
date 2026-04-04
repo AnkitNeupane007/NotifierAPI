@@ -9,6 +9,13 @@ import { verifyEmail } from "../controllers/auth/verifyEmail.js";
 import { resendVerificationEmail } from "../controllers/auth/resendVerificationEmail.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 
+import {
+  loginLimiter,
+  refreshLimiter,
+  spamLimiter,
+  verificationLimiter,
+} from "../middlewares/rateLimiter.js";
+
 //Validation Middleware import
 import { validateRequest } from "../middlewares/validateRequest.js";
 
@@ -24,23 +31,29 @@ const router = express.Router();
 
 router.post(
   "/register",
+  spamLimiter,
   validateRequest(registerSchema),
   asyncHandler(register),
 );
 
-router.get("/verify-email", asyncHandler(verifyEmail)); // query "token" is required
+router.get("/verify-email", verificationLimiter, asyncHandler(verifyEmail)); // query "token" is required
 
 router.post(
   "/resend-verification",
+  verificationLimiter,
   validateRequest(resendVerificationEmailSchema),
-  resendVerificationEmail,
+  asyncHandler(resendVerificationEmail),
 );
 
 router.post("/logout", authMiddleware, asyncHandler(logout));
 
-router.post("/login", validateRequest(loginSchema), asyncHandler(login));
+router.post(
+  "/login",
+  loginLimiter,
+  validateRequest(loginSchema),
+  asyncHandler(login),
+);
 
-router.post("/refresh", asyncHandler(refresh));
+router.post("/refresh", refreshLimiter, asyncHandler(refresh));
 
 export default router;
-

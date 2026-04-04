@@ -37,7 +37,7 @@ export const swaggerDocs = (app) => {
     },
     servers: [
       {
-        url: `${env.BASE_URL}`,
+        url: `http://localhost:5001`,
         description: "Development server",
       },
     ],

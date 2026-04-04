@@ -15,13 +15,15 @@ import { uploadImage } from "../middlewares/upload.js";
 
 // Validation middleware
 import { validateRequest } from "../middlewares/validateRequest.js";
-import {
-  statusQuerySchema,
-} from "../validators/announcements.js";
+import { statusQuerySchema } from "../validators/announcements.js";
+
+import { userLimiter } from "../middlewares/rateLimiter.js";
 
 const router = express.Router();
 
 router.use(authMiddleware);
+
+router.use(userLimiter);
 
 router.get("/me", asyncHandler(getMyself));
 
@@ -31,18 +33,14 @@ router.post(
   asyncHandler(uploadProfilePicture),
 );
 
-router.get(
-  "/",
-  authorize("ADMIN"),
-  asyncHandler(getUsers),
-);
+router.get("/", authorize("ADMIN"), asyncHandler(getUsers));
 
 router.delete("/:id", authorize("ADMIN"), asyncHandler(deleteUser));
 
 router.get(
   "/:id/announcements",
   authorize("ADMIN"),
-  // validateRequest(statusQuerySchema, "query"),
+  validateRequest(statusQuerySchema, "query"),
   asyncHandler(getUserAnnouncementStatus),
 ); // Query params for key "status" should be either "read" or "unread"
 

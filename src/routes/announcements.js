@@ -19,18 +19,17 @@ import { authorize } from "../middlewares/authorize.js";
 
 // Validation middleware
 import { validateRequest } from "../middlewares/validateRequest.js";
-import {
-  announcementSchema,
-} from "../validators/announcements.js";
+import { announcementSchema } from "../validators/announcements.js";
+
+import { userLimiter } from "../middlewares/rateLimiter.js";
 
 const router = express.Router();
 
 router.use(authMiddleware);
 
-router.get(
-  "/unread",
-  asyncHandler(getUnread),
-);
+router.use(userLimiter);
+
+router.get("/unread", asyncHandler(getUnread));
 
 router.get("/admin", authorize("ADMIN"), asyncHandler(getAdminAnnouncements)); //can give query param page, limit for pagination
 
