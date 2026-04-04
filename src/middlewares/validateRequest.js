@@ -1,9 +1,9 @@
-import { application } from "express";
 import AppError from "../utils/AppError.js";
 
-export const validateRequest = (schema) => {
+export const validateRequest = (schema, source = "body") => {
   return (req, res, next) => {
-    const result = schema.safeParse(req.body);
+    // Determine the source to validate (body, query, or params)
+    const result = schema.safeParse(req[source]);
 
     if (!result.success) {
       const errors = result.error.issues.map((err) => ({
@@ -17,7 +17,9 @@ export const validateRequest = (schema) => {
 
       return next(new AppError(formattedMessage, 400));
     }
-    req.body = result.data;
+
+    Object.assign(req[source], result.data);
+
     next();
   };
 };

@@ -1,9 +1,14 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import {
+  announcementBaseSchema,
+  paginationSchema,
+} from "./announcementResponses.js";
 
 extendZodWithOpenApi(z);
 
 export const userProfileSchema = z.object({
+  id: z.string().openapi({ example: "cm0z..." }),
   name: z.string().openapi({ example: "John Doe" }),
   email: z.string().email().openapi({ example: "user@example.com" }),
   role: z.string().openapi({ example: "USER" }),
@@ -22,18 +27,17 @@ export const getUsersResponseSchema = z
   .object({
     status: z.string().openapi({ example: "success" }),
     data: z.object({
-      users: z.object({
-        userList: z.array(
-          z.object({
-            id: z.string().openapi({ example: "cm0z..." }),
-            name: z.string().openapi({ example: "John Doe" }),
-            email: z.string().email().openapi({ example: "user@example.com" }),
-            isDeleted: z.boolean().openapi({ example: false }),
-            isEmailVerified: z.boolean().openapi({ example: true }),
-          }),
-        ),
-      }),
+      users: z.array(
+        z.object({
+          id: z.string().openapi({ example: "cm0z..." }),
+          name: z.string().openapi({ example: "John Doe" }),
+          email: z.string().email().openapi({ example: "user@example.com" }),
+          isDeleted: z.boolean().openapi({ example: false }),
+          isEmailVerified: z.boolean().openapi({ example: true }),
+        }),
+      ),
     }),
+    pagination: paginationSchema.optional(),
   })
   .openapi("GetUsersResponse");
 
@@ -42,13 +46,26 @@ export const userAnnouncementStatusResponseSchema = z
     status: z.string().openapi({ example: "success" }),
     data: z.object({
       read: z
-        .array(z.any())
+        .array(
+          announcementBaseSchema.omit({
+            isRead: true,
+            userId: true,
+            updatedAt: true,
+          }),
+        )
         .optional()
         .openapi({ description: "Array of read announcements" }),
       unread: z
-        .array(z.any())
+        .array(
+          announcementBaseSchema.omit({
+            isRead: true,
+            userId: true,
+            updatedAt: true,
+          }),
+        )
         .optional()
         .openapi({ description: "Array of unread announcements" }),
     }),
+    pagination: paginationSchema.optional(),
   })
   .openapi("UserAnnouncementStatusResponse");

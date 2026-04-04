@@ -7,6 +7,9 @@ import { z } from "zod";
 import swaggerUi from "swagger-ui-express";
 import { env } from "../config/envValidator.js";
 
+// Import mapping logic
+import registerDocs from "../swagger/index.js";
+
 // Ensure zod is extended
 extendZodWithOpenApi(z);
 
@@ -19,6 +22,9 @@ registry.registerComponent("securitySchemes", "bearerAuth", {
 });
 
 export const swaggerDocs = (app) => {
+  // Register all structured endpoints
+  registerDocs();
+
   // Generate the OpenAPI spec definition
   const generator = new OpenApiGeneratorV3(registry.definitions);
 
@@ -31,7 +37,7 @@ export const swaggerDocs = (app) => {
     },
     servers: [
       {
-        url: `${env.BASE_URL}`,
+        url: `http://localhost:5001`,
         description: "Development server",
       },
     ],
@@ -43,5 +49,5 @@ export const swaggerDocs = (app) => {
   });
 
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-  console.log("Swagger docs available at http://localhost:5001/api-docs");
+  console.log(`Swagger docs available at ${env.BASE_URL}/api-docs"`);
 };

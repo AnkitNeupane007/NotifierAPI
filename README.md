@@ -1,122 +1,147 @@
-# NotifierAPI Backend
+# 📢 NotifierAPI Backend
 
-A robust Node.js backend API featuring user authentication, email verification, token management, and an announcements system. Built using Express.js and Prisma ORM.
+A robust, enterprise-grade Node.js backend API for managing user authentication, announcements, and notifications. Built with **Express.js** and **Prisma ORM**, this system is engineered for high availability, security, and scalability.
 
-## 🚀 Tech Stack
+---
 
-- **Runtime:** Node.js
-- **Framework:** Express.js v5
-- **ORM:** Prisma
-- **Validation:** Zod
-- **Authentication:** JSON Web Tokens (JWT) & bcryptjs
-- **Email Services:** Nodemailer
+## ✨ Key Features
 
-## ✨ Features
-
-- **User Authentication:**
-  - Registration & Login
+- **Advanced Authentication & Security**
   - JWT Access and Refresh token lifecycle
-  - Logout functionality
-- **Account Security:**
-  - Password hashing
-  - Email verification workflow
-  - Resend verification emails
-- **Announcements API:** Let users retrieve and manage announcements.
-- **Error Handling & Validation:** Centralized async error handling and Zod schema validation.
+  - Role-Based Access Control (RBAC) separating Admin and User privileges
+  - Account security: Password hashing (bcryptjs), Email verification workflow, and Password recovery
 
-## 📋 Prerequisites
+- **Announcement Management System**
+  - Admins can broadcast announcements with priorities, types, and due dates
+  - Rich media attachments using Supabase Storage
+  - Track user read/unread status and handle assignments/submissions
+
+- **Enterprise-Ready Architecture**
+  - **Rate Limiting:** Redis-backed distributed rate limiting to protect against DDoS and brute-force attacks
+  - **Validation & Error Handling:** Centralized async error handling and strict Zod schema validation
+  - **Documentation:** Auto-generated interactive Swagger OpenAPI documentation
+
+---
+
+## 🏗️ Backend Architecture
+
+NotifierAPI utilizes a modern, scalable Request Flow Architecture:
+
+1. **Routing & Middlewares** — Requests pass through security headers (Helmet), JWT validation, RBAC checks, and Zod schema validation.
+2. **Rate Limiting (Redis)** — Distributed counter store to throttle requests efficiently, preventing resource exhaustion.
+3. **Controllers & Services** — Core business logic handling announcements, users, and authentications.
+4. **Data Access (Prisma ORM)** — Type-safe queries to a PostgreSQL database.
+5. **Storage (Supabase)** — Secure cloud object storage for profile pictures and announcement attachments.
+
+### Database Schema Highlights
+
+- **User** — Manages authentication, roles, profile pictures, and verification status.
+- **Announcement & Attachments** — Handles global/targeted broadcasts and associated files.
+- **ReadStatus** — Tracks real-time read receipts per user per announcement.
+- **Submission** — Supports interactive announcements (assignments) tracking user submissions and grades.
+
+---
+
+## 🐳 Docker Deployment
+
+NotifierAPI is fully containerized, making it trivial to deploy consistently across environments.
+
+The included `docker-compose.yml` orchestrates two core services:
+
+- **`backend`** — The Node.js Express API.
+- **`redis`** — In-memory store for rate limiting and fast caching.
+
+> **Note:** PostgreSQL should be provided externally or added to the compose stack.
+
+---
+
+## 🛠️ How to Run Locally
+
+### Prerequisites
 
 - [Node.js](https://nodejs.org/) (v18+ recommended)
-- A relational database supported by Prisma (e.g., PostgreSQL, MySQL)
-- SMTP credentials for email services (e.g., Gmail)
+- [PostgreSQL](https://www.postgresql.org/) database
+- [Docker](https://www.docker.com/) (optional, for Redis and containerized runs)
+- SMTP credentials (e.g., Gmail)
+- Supabase account (for storage)
 
-## 🛠️ Installation & Setup
+### Step-by-Step Guide
 
-1. **Clone the repository** (if applicable) and navigate to the project root:
+**1. Clone the repository and install dependencies:**
 
-   ```bash
-   cd NotifierAPI/backend
-   ```
+```bash
+cd NotifierAPI/backend
+npm install
+```
 
-2. **Install dependencies:**
+**2. Environment Configuration:**
 
-   ```bash
-   npm install
-   ```
+Copy the sample environment file and fill in your credentials:
 
-3. **Environment Variables:**
-   Create a `.env` file in the root directory and copy the contents from `.env.example`:
+```bash
+cp .env.example .env
+```
 
-   ```bash
-   cp .env.example .env
-   ```
+Ensure you provide valid `DATABASE_URL` (PostgreSQL), `REDIS_URL` (or fallback to local), SMTP, and Supabase credentials in the `.env` file.
 
-   Fill in your configuration details:
+**3. Start Redis infrastructure (via Docker):**
 
-   ```env
-   BASE_URL=http://localhost:3000
+```bash
+docker-compose up -d redis
+```
 
-   EMAIL_HOST="smtp.gmail.com"
-   EMAIL_PORT=587
-   EMAIL_USER=your_email
-   EMAIL_PASS=your_pass
+**4. Database Migration:**
 
-   DATABASE_URL=your_database_url
-   NODE_ENV=development
+Apply migrations to your PostgreSQL database and generate the Prisma Client:
 
-   # For generating auth tokens
-   ACCESS_SECRET=your_access_secret
-   REFRESH_SECRET=your_refresh_secret
+```bash
+npx prisma migrate dev
+```
 
-   # For token expiry
-   ACCESS_EXPIRES_IN=15m
-   REFRESH_EXPIRES_IN=7d
-   ```
+**5. Start the Application:**
 
-4. **Database Migration & Generation:**
-   Apply migrations to your database and generate the Prisma client:
-
-   ```bash
-   npx prisma migrate dev
-   ```
-
-5. **Seed the database (Optional):**
-   ```bash
-   npm run seed:announcements
-   ```
-
-## 🚀 Running the Server
-
-Start the application in development mode with live-reloading:
+Run the development server with live-reloading:
 
 ```bash
 npm run dev
 ```
 
-The server will start, typically on the port configured or default (e.g., `http://localhost:5001`).
+The API will be available at `http://localhost:5001`.
 
-## � API Documentation (Swagger)
+**6. Run via Docker Compose (Full Stack):**
 
-This API uses **Swagger UI** for interactive documentation, dynamically generated directly from the existing **Zod** schema validators using `@asteasolutions/zod-to-openapi`. This ensures the documentation is always aligned with runtime validation rules.
+Alternatively, run the entire backend and Redis stack via Docker:
 
-Once the server is running, you can access the Swagger documentation in your browser at:
-**[http://localhost:5001/api-docs](http://localhost:5001/api-docs)**
-
-## �📁 Project Structure
-
+```bash
+docker-compose up --build
 ```
+
+---
+
+## 📖 API Documentation (Swagger)
+
+Interactive API documentation is generated dynamically from Zod schemas. Once the application is running, visit:
+
+👉 **[http://localhost:5001/api-docs](http://localhost:5001/api-docs)**
+
+---
+
+## 📁 Project Structure
+
+```text
 ├── prisma/
-│   ├── migrations/         # Database migrations history
-│   ├── seed/               # Database seeders
+│   ├── migrations/         # Database migration history
+│   ├── seed/               # Database seed scripts
 │   └── schema.prisma       # Prisma database schema definition
 ├── src/
-│   ├── config/             # Environment and DB configuration
-│   ├── controller/         # Route controllers (Auth, Users, Announcements)
-│   ├── middleware/         # Express middlewares (Auth, Error Handler, Validator)
-│   ├── routes/             # API routing definitions
-│   ├── utils/              # Helper utilities (Email, Tokens, AppError)
+│   ├── config/             # DB, Redis, Env, and Swagger configs
+│   ├── controllers/        # Route controllers (Auth, Users, Announcements)
+│   ├── middlewares/        # Auth, Rate Limiter, Error Handler, Uploads, etc.
+│   ├── routes/             # API routing definitions (Express routers)
+│   ├── utils/              # Helper utilities (Emails, Tokens, AppError)
 │   ├── validators/         # Zod validation schemas
 │   └── server.js           # Express app entry point
-├── .env.example            # Environment variable template
-└── package.json            # Project metadata and scripts
+├── docker-compose.yml      # Docker Compose configuration
+├── Dockerfile              # Container build instructions
+└── package.json            # Dependencies and scripts
 ```
