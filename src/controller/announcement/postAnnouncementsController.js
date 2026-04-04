@@ -2,7 +2,6 @@ import { prisma } from "../../config/db.js";
 
 const postAnnouncements = async (req, res) => {
   const { title, content, priority, type, dueDate, maxScore } = req.body;
-
   const userId = req.user.id;
 
   const announcement = await prisma.announcement.create({
@@ -12,7 +11,7 @@ const postAnnouncements = async (req, res) => {
       priority: priority,
       type: type,
       dueDate: dueDate ? new Date(dueDate) : null,
-      maxScore: maxScore,
+      maxScore: maxScore ? parseInt(maxScore) : null,
       userId: userId,
     },
   });

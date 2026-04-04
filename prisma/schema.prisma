@@ -120,6 +120,7 @@ model AnnouncementAttachment {
   @@map("announcement_attachment")
 }
 
+// todo Later add a submission logic
 model Submission {
   id          String           @id @default(uuid())
   status      submissionStatus @default(PENDING)
@@ -140,6 +141,7 @@ model Submission {
   @@map("submission")
 }
 
+// todo add a submission attachment logic later
 model SubmissionAttachment {
   id         String   @id @default(uuid())
   filename   String

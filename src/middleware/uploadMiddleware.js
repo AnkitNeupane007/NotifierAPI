@@ -42,4 +42,15 @@ export const uploadDocument = createUploader(
   ["application/pdf", "application/msword"],
   10,
 ); // Max 10MB docs
+
+export const uploadImageAndDocs = createUploader(
+  [
+    "image/",
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ],
+  10,
+); // Max 10MB for images and docs
+
 export const uploadAnything = createUploader(); // Generic, no type check, 5MB limit

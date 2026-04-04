@@ -1,9 +1,10 @@
 // src/utils/supabaseStorage.js
 import { supabase } from "../config/supabase.js";
 import AppError from "./AppError.js";
+import { v4 as uuidv4 } from "uuid";
 
 /**
- * Uploads a file buffer to a Supabase storage bucket.
+ * Uploads a profile picture to the Supabase storage bucket.
  *
  * @param {Object} file - The file object from multer (req.file)
  * @param {string} bucketName - The Supabase bucket name (e.g., 'profile-pictures', 'attachments')
@@ -45,6 +46,58 @@ const uploadToSupabase = async (file, bucketName, folderPath = "") => {
   return filePath;
 };
 
+/**
+ * Generic multi-file upload. Does NOT delete existing files.
+ * Returns the stored filePath (not a URL) — resolve URLs at request time.
+ *
+ * @param {Object} file        - multer file object
+ * @param {string} bucketName  - Supabase bucket name
+ * @param {string} folderPath  - Full folder path inside the bucket
+ * @param {string} fileId      - Unique ID prefix for the filename (e.g. attachmentId)
+ * @returns {Promise<string>}  - filePath to store in DB
+ */
+const uploadFile = async (file, bucketName, folderPath, fileId) => {
+  if (!file) throw new AppError("No file provided for upload", 400);
+
+  const extension = file.originalname.split(".").pop();
+  const nameWithoutExt = file.originalname
+    .split(".")
+    .slice(0, -1)
+    .join(".")
+    .replace(/\s+/g, "-")
+    .toLowerCase();
+
+  const uuid = uuidv4();
+
+  const fileName = `${nameWithoutExt}-${uuid}.${extension}`;
+  const filePath = `${folderPath}/${fileName}`;
+
+  const { error } = await supabase.storage
+    .from(bucketName)
+    .upload(filePath, file.buffer, {
+      contentType: file.mimetype,
+      upsert: true,
+    });
+
+  if (error) throw new AppError(`Upload failed: ${error.message}`, 500);
+
+  return filePath;
+};
+
+/**
+ * Generic multi-file delete.
+ *
+ * @param {string}   bucketName
+ * @param {string[]} filePaths  - array of fileUrl values from DB records
+ */
+const deleteFiles = async (bucketName, filePaths) => {
+  if (!filePaths?.length) return;
+
+  const { error } = await supabase.storage.from(bucketName).remove(filePaths);
+
+  if (error) throw new AppError(`Delete failed: ${error.message}`, 500);
+};
+
 const getPublicUrl = (bucketName, filePath) => {
   const { data: publicUrl, error } = supabase.storage
     .from(bucketName)
@@ -57,16 +110,36 @@ const getPublicUrl = (bucketName, filePath) => {
   return publicUrl.publicUrl;
 };
 
-const getSignedUrl = async (bucketName, filePath, expiresIn = 30) => {
+// Multiple files signed url is generated
+const getSignedUrls = async (bucketName, filePaths, expiresIn = 30) => {
+  if (!filePaths?.length) return [];
+
   const { data, error } = await supabase.storage
     .from(bucketName)
-    .createSignedUrl(filePath, expiresIn);
+    .createSignedUrls(filePaths, expiresIn);
 
-  if (error) {
-    throw new AppError(`Failed to create signed URL: ${error.message}`, 500);
+  if (error)
+    throw new AppError(`Failed to create signed URLs: ${error.message}`, 500);
+
+  // Supabase returns [{path, signedUrl, error}]
+  const failed = data.filter((item) => item.error);
+  if (failed.length) {
+    throw new AppError(
+      `Failed to sign ${failed.length} file(s): ${failed.map((f) => f.path).join(", ")}`,
+      500,
+    );
   }
 
-  return data.signedUrl;
+  return data.map((item) => ({
+    path: item.path,
+    signedUrl: item.signedUrl,
+  }));
 };
 
-export { uploadToSupabase, getPublicUrl, getSignedUrl };
+export {
+  uploadToSupabase,
+  getPublicUrl,
+  getSignedUrls,
+  uploadFile,
+  deleteFiles,
+};

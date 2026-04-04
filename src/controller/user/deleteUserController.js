@@ -20,9 +20,6 @@ const deleteUser = async (req, res) => {
   }
 
   await prisma.$transaction([
-    prisma.readStatus.deleteMany({
-      where: { userId },
-    }),
     prisma.user.update({
       where: { id: userId },
       data: { isDeleted: true },

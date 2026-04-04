@@ -9,6 +9,9 @@ import deleteAnnouncementsById from "../controller/announcement/deleteAnnounceme
 import markAsRead from "../controller/announcement/markAsReadController.js";
 import getUnread from "../controller/announcement/getUnreadController.js";
 import getAdminAnnouncements from "../controller/announcement/getAdminAnnouncementsController.js";
+import uploadFiletoAnnouncements from "../controller/announcement/uploadFiletoAnnouncementsController.js";
+
+import { uploadImageAndDocs } from "../middleware/uploadMiddleware.js";
 
 //Auth Middleware imports
 import { authMiddleware } from "../middleware/authMiddleware.js";
@@ -43,6 +46,15 @@ router.post(
   asyncHandler(postAnnouncements),
 );
 
+router.post(
+  "/upload/:id/",
+  authorize("ADMIN"),
+  uploadImageAndDocs.fields([
+    { name: "images", maxCount: 5 }, // Max 5 images
+    { name: "documents", maxCount: 5 }, // Max 5 documents
+  ]),
+  asyncHandler(uploadFiletoAnnouncements),
+);
 router.post("/read/:announcementId/", asyncHandler(markAsRead));
 
 export default router;
