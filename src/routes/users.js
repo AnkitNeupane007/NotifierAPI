@@ -7,6 +7,7 @@ import deleteUser from "../controllers/users/delete.js";
 import getUserAnnouncementStatus from "../controllers/users/getAnnouncementStatus.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 import { uploadProfilePicture } from "../controllers/users/profilePic.js";
+import getUser from "../controllers/users/getUser.js";
 
 //Auth Middleware imports
 import { authMiddleware } from "../middlewares/auth.js";
@@ -34,6 +35,8 @@ router.post(
 );
 
 router.get("/", authorize("ADMIN"), asyncHandler(getUsers));
+
+router.get("/:id", authorize("ADMIN"), asyncHandler(getUser));
 
 router.delete("/:id", authorize("ADMIN"), asyncHandler(deleteUser));
 
