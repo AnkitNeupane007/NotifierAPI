@@ -1,6 +1,6 @@
 # 📢 NotifierAPI Backend
 
-A robust, enterprise-grade Node.js backend API for managing user authentication, announcements, and notifications. Built with **Express.js** and **Prisma ORM**, this system is engineered for high availability, security, and scalability.
+A robust, enterprise-grade Node.js backend API for managing user authentication, announcements, and notifications. Built with **Express.js** and **Prisma ORM**, this system is engineered for high availability, security, and scalability. It is fully **deployed and hosted on Microsoft Azure**, leveraging cloud-native features for optimal performance.
 
 ---
 
@@ -20,6 +20,17 @@ A robust, enterprise-grade Node.js backend API for managing user authentication,
   - **Rate Limiting:** Redis-backed distributed rate limiting to protect against DDoS and brute-force attacks
   - **Validation & Error Handling:** Centralized async error handling and strict Zod schema validation
   - **Documentation:** Auto-generated interactive Swagger OpenAPI documentation
+
+---
+
+## ☁️ Azure Cloud Deployment
+
+NotifierAPI is designed for and actively **deployed on Microsoft Azure**. The deployment architecture takes advantage of Azure's robust ecosystem to ensure enterprise-grade reliability:
+
+- **Azure Virtual Machine:** The backend Node.js API is containerized via Docker and orchestrated on Azure for seamless scaling and zero-downtime deployments.
+- **Neon Database for PostgreSQL:** A fully managed, highly available PostgreSQL instance ensures secure and resilient data storage.
+- **Azure Cache for Redis:** Provides a distributed, low-latency rate-limiting and caching layer, protecting the API from abuse while keeping response times minimal.
+- **CI/CD Integration:** Automated deployment pipelines ensure seamless updates directly to the Azure environment.
 
 ---
 

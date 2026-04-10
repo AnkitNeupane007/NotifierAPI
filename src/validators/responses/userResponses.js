@@ -11,7 +11,15 @@ export const userProfileSchema = z.object({
   id: z.string().openapi({ example: "cm0z..." }),
   name: z.string().openapi({ example: "John Doe" }),
   email: z.string().email().openapi({ example: "user@example.com" }),
-  role: z.string().openapi({ example: "USER" }),
+  isEmailVerified: z.boolean().openapi({ example: false }),
+  profilePictureUrl: z.string().nullable().openapi({
+    example: "https://...",
+    description: "Profile picture URL with cache-busting timestamp appended",
+  }),
+  updatedAt: z
+    .string()
+    .datetime()
+    .openapi({ example: "2026-04-10T10:00:00.000Z" }),
 });
 
 export const getMyselfResponseSchema = z

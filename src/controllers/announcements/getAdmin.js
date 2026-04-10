@@ -61,7 +61,7 @@ const getAdminAnnouncements = async (req, res) => {
         page,
         limit,
         totalPages: Math.ceil(total / limit),
-        next: limit * page < total,
+        hasNext: limit * page < total,
       },
     },
   });
