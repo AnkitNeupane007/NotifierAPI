@@ -3,6 +3,18 @@ import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 
 extendZodWithOpenApi(z);
 
+export const attachmentSchema = z.object({
+  filename: z.string().openapi({ example: "document.pdf" }),
+  fileUrl: z
+    .string()
+    .openapi({ example: "/announcements/cm0z.../document.pdf" }),
+  fileType: z.string().openapi({ example: "application/pdf" }),
+  signedUrl: z.string().url().openapi({
+    example: "https://supabase.../document.pdf?token=...",
+    description: "Signed URL valid for 1 hour",
+  }),
+});
+
 export const announcementBaseSchema = z.object({
   id: z.string().openapi({ example: "cm0z..." }),
   title: z.string().openapi({ example: "System Maintenance" }),
@@ -80,9 +92,8 @@ export const getAnnouncementByIdResponseSchema = z
         .omit({ isRead: true, userId: true, updatedAt: true })
         .extend({
           isRead: z.boolean().optional(),
-          readAt: z.string().optional(),
-          attachments: z.array(z.any()).optional(),
-          submission: z.any().optional(),
+          readAt: z.string().nullable().optional(),
+          attachments: z.array(attachmentSchema).optional(),
         }),
     }),
   })

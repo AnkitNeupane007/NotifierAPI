@@ -14,7 +14,7 @@ const uploadProfilePicture = async (req, res) => {
     throw new AppError("Please upload a file", 400);
   }
 
-  if (!file.mimetype.startsWith("profilePicture/")) {
+  if (!file.mimetype.startsWith("image/")) {
     throw new AppError("Profile picture must be an image", 400);
   }
 

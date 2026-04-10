@@ -20,6 +20,34 @@ export const userSwaggerDocs = {
     },
   },
 
+  uploadProfilePicture: {
+    method: "post",
+    path: "/user/me/profile-picture",
+    tags: ["Users"],
+    summary: "Upload profile picture",
+    security: [{ bearerAuth: [] }],
+    request: {
+      body: {
+        content: {
+          "multipart/form-data": {
+            schema: z.object({
+              profilePicture: z.string().openapi({
+                format: "binary",
+                description: "Profile picture image file",
+              }),
+            }),
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Profile picture uploaded successfully",
+        content: { "application/json": { schema: getMyselfResponseSchema } },
+      },
+    },
+  },
+
   getUsers: {
     method: "get",
     path: "/user",
@@ -36,6 +64,25 @@ export const userSwaggerDocs = {
       200: {
         description: "List of users",
         content: { "application/json": { schema: getUsersResponseSchema } },
+      },
+    },
+  },
+
+  getUser: {
+    method: "get",
+    path: "/user/{id}",
+    tags: ["Users"],
+    summary: "Get a user by ID (Admin)",
+    security: [{ bearerAuth: [] }],
+    request: {
+      params: z.object({
+        id: z.string().openapi({ description: "User ID" }),
+      }),
+    },
+    responses: {
+      200: {
+        description: "User details",
+        content: { "application/json": { schema: getMyselfResponseSchema } },
       },
     },
   },
