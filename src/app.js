@@ -40,6 +40,10 @@ app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/announcements", announcementRoutes);
 
+app.route("/health").get((req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 // Apply swagger configuration
 if (process.env.NODE_ENV !== "production") {
   swaggerDocs(app);
