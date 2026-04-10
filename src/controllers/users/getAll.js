@@ -16,9 +16,7 @@ const getUsers = async (req, res) => {
       select: {
         id: true,
         name: true,
-        email: true,
         isDeleted: true,
-        isEmailVerified: true,
         profilePictureUrl: true,
         updatedAt: true,
       },

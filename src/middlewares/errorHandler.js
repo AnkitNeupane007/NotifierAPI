@@ -21,7 +21,6 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Handle specific Multer errors
   if (err instanceof multer.MulterError) {
     if (err.code === "LIMIT_UNEXPECTED_FILE") {
       return res.status(400).json({
@@ -30,7 +29,6 @@ const errorHandler = (err, req, res, next) => {
       });
     }
 
-    // Fallback for other Multer errors (like exceeding size limit if not caught earlier)
     return res.status(400).json({
       status: "error",
       message: err.message,
@@ -38,7 +36,6 @@ const errorHandler = (err, req, res, next) => {
   }
 
   if (env.NODE_ENV === "development") {
-    // Detailed error for developers
 
     return res.status(err.statusCode).json({
       status: err.status,
@@ -48,7 +45,6 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Production: Only send operational errors to the client
   if (err.isOperational) {
     return res.status(err.statusCode).json({
       status: err.status,
@@ -56,7 +52,6 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Production: Programming or unknown DB error (don't leak details)
   console.error("ERROR:", err);
   return res.status(500).json({
     status: "error",
