@@ -1,5 +1,13 @@
 # 📢 NotifierAPI Backend
 
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white)
+![Azure](https://img.shields.io/badge/Azure-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
+
 A robust, enterprise-grade Node.js backend API for managing user authentication, announcements, and notifications. Built with **Express.js** and **Prisma ORM**, this system is engineered for high availability, security, and scalability. It is fully **deployed and hosted on Microsoft Azure**, leveraging cloud-native features for optimal performance.
 
 ---
